@@ -1,0 +1,130 @@
+<mxfile host="app.diagrams.net" modified="2026-11-26T01:55:00.000Z" agent="Antigravity" version="24.7.17" type="device">
+  <diagram id="erd-lost-and-found" name="ERD Lost &amp; Found Kampus">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="950" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- USERS -->
+        <mxCell id="tbl_users" value="users" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=28;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="60" width="230" height="184" as="geometry" />
+        </mxCell>
+        <mxCell id="col_users" value="&lt;b&gt;PK&lt;/b&gt; id : INT&#xa;nama : VARCHAR(100)&#xa;&lt;b&gt;UQ&lt;/b&gt; email : VARCHAR(100)&#xa;nim_nip : VARCHAR(30) (nullable)&#xa;password : VARCHAR(255)&#xa;role : ENUM('user','admin')&#xa;created_at : TIMESTAMP" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="tbl_users">
+          <mxGeometry y="28" width="230" height="156" as="geometry" />
+        </mxCell>
+
+        <!-- CATEGORIES -->
+        <mxCell id="tbl_categories" value="categories" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=28;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="310" width="230" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="col_categories" value="&lt;b&gt;PK&lt;/b&gt; id : INT&#xa;name : VARCHAR(100)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="tbl_categories">
+          <mxGeometry y="28" width="230" height="56" as="geometry" />
+        </mxCell>
+
+        <!-- LOCATIONS -->
+        <mxCell id="tbl_locations" value="locations" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=28;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="450" width="230" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="col_locations" value="&lt;b&gt;PK&lt;/b&gt; id : INT&#xa;name : VARCHAR(100)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="tbl_locations">
+          <mxGeometry y="28" width="230" height="56" as="geometry" />
+        </mxCell>
+
+        <!-- ITEMS -->
+        <mxCell id="tbl_items" value="items" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=28;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="210" width="260" height="254" as="geometry" />
+        </mxCell>
+        <mxCell id="col_items" value="&lt;b&gt;PK&lt;/b&gt; id : INT&#xa;&lt;b&gt;FK&lt;/b&gt; user_id : INT&#xa;&lt;b&gt;FK&lt;/b&gt; category_id : INT&#xa;&lt;b&gt;FK&lt;/b&gt; location_id : INT&#xa;type : ENUM('lost','found')&#xa;title : VARCHAR(150)&#xa;description : TEXT&#xa;secret_detail : TEXT&#xa;photo : VARCHAR(255)&#xa;status : ENUM('open','claim_pending','returned','closed')&#xa;created_at : DATETIME" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="tbl_items">
+          <mxGeometry y="28" width="260" height="226" as="geometry" />
+        </mxCell>
+
+        <!-- VERIFICATION_QUESTIONS -->
+        <mxCell id="tbl_vq" value="verification_questions" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=28;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="540" width="260" height="124" as="geometry" />
+        </mxCell>
+        <mxCell id="col_vq" value="&lt;b&gt;PK&lt;/b&gt; id : INT&#xa;&lt;b&gt;FK&lt;/b&gt; item_id : INT&#xa;question : VARCHAR(255)&#xa;answer : VARCHAR(255)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="tbl_vq">
+          <mxGeometry y="28" width="260" height="96" as="geometry" />
+        </mxCell>
+
+        <!-- CLAIMS -->
+        <mxCell id="tbl_claims" value="claims" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=28;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="130" width="250" height="184" as="geometry" />
+        </mxCell>
+        <mxCell id="col_claims" value="&lt;b&gt;PK&lt;/b&gt; id : INT&#xa;&lt;b&gt;FK&lt;/b&gt; item_id : INT&#xa;&lt;b&gt;FK&lt;/b&gt; user_id : INT&#xa;status : ENUM('pending','approved','rejected')&#xa;&lt;b&gt;FK&lt;/b&gt; reviewed_by : INT (nullable)&#xa;reviewed_at : DATETIME (nullable)&#xa;created_at : DATETIME" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="tbl_claims">
+          <mxGeometry y="28" width="250" height="156" as="geometry" />
+        </mxCell>
+
+        <!-- CLAIM_ANSWERS -->
+        <mxCell id="tbl_claim_answers" value="claim_answers" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=28;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="420" width="250" height="124" as="geometry" />
+        </mxCell>
+        <mxCell id="col_claim_answers" value="&lt;b&gt;PK&lt;/b&gt; id : INT&#xa;&lt;b&gt;FK&lt;/b&gt; claim_id : INT&#xa;&lt;b&gt;FK&lt;/b&gt; question_id : INT&#xa;answer : TEXT" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="tbl_claim_answers">
+          <mxGeometry y="28" width="250" height="96" as="geometry" />
+        </mxCell>
+
+        <!-- CLAIM_LOGS -->
+        <mxCell id="tbl_claim_logs" value="claim_logs" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=28;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="610" width="250" height="144" as="geometry" />
+        </mxCell>
+        <mxCell id="col_claim_logs" value="&lt;b&gt;PK&lt;/b&gt; id : INT&#xa;&lt;b&gt;FK&lt;/b&gt; user_id : INT&#xa;&lt;b&gt;FK&lt;/b&gt; item_id : INT&#xa;status_percobaan : ENUM('berhasil','gagal')&#xa;waktu_percobaan : TIMESTAMP" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;spacingRight=8;spacingTop=6;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="tbl_claim_logs">
+          <mxGeometry y="28" width="250" height="116" as="geometry" />
+        </mxCell>
+
+        <!-- RELATIONSHIPS -->
+        <mxCell id="rel_users_items" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="tbl_users" target="tbl_items">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_cat_items" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="tbl_categories" target="tbl_items">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_loc_items" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="tbl_locations" target="tbl_items">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_items_vq" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="tbl_items" target="tbl_vq">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_items_claims" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="tbl_items" target="tbl_claims">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_users_claims" value="1 : N (user_id)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="tbl_users" target="tbl_claims">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="95" />
+              <mxPoint x="550" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_users_claims_rev" value="1 : N (reviewed_by)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;startArrow=ERzeroToOne;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="tbl_users" target="tbl_claims">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="65" />
+              <mxPoint x="935" y="65" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_claims_answers" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="tbl_claims" target="tbl_claim_answers">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_vq_answers" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="tbl_vq" target="tbl_claim_answers">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_items_logs" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="tbl_items" target="tbl_claim_logs">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="420" />
+              <mxPoint x="360" y="670" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_users_logs" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="tbl_users" target="tbl_claim_logs">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="25" y="152" />
+              <mxPoint x="25" y="682" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
