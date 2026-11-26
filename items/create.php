@@ -20,6 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $locationId   = filter_input(INPUT_POST, 'location_id', FILTER_VALIDATE_INT);
     $description  = trim($_POST['description'] ?? '');
     $secretDetail = trim($_POST['secret_detail'] ?? '');
+    $questions    = is_array($_POST['questions'] ?? null) ? $_POST['questions'] : [];
+    $answers      = is_array($_POST['answers'] ?? null) ? $_POST['answers'] : [];
  
     // Validasi sisi server
     if ($title === '' || strlen($title) > 150) {
@@ -36,6 +38,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($description === '') {
         $errors[] = "Deskripsi barang wajib diisi.";
+    }
+    for ($i = 0; $i < 2; $i++) {
+        $questionValue = $questions[$i] ?? '';
+        $answerValue = $answers[$i] ?? '';
+        $question = is_string($questionValue) ? trim($questionValue) : '';
+        $answer = is_string($answerValue) ? trim($answerValue) : '';
+        if ($question === '' || mb_strlen($question) > 255) {
+            $errors[] = "Pertanyaan verifikasi " . ($i + 1) . " wajib diisi (maksimal 255 karakter).";
+        }
+        if ($answer === '' || mb_strlen($answer) > 255) {
+            $errors[] = "Jawaban rahasia " . ($i + 1) . " wajib diisi (maksimal 255 karakter).";
+        }
     }
  
     // Pastikan ID kategori & lokasi benar-benar ada di database
@@ -66,21 +80,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
     // Simpan postingan dengan status awal 'open' (sesuai query di index.php)
     if (empty($errors)) {
-        $stmt = $pdo->prepare(
-            "INSERT INTO items
-            (user_id, category_id, location_id, type, title, description, secret_detail, photo,  status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'open')"
-        );
-        $stmt->execute([
-            $_SESSION['user_id'],
-            $categoryId,
-            $locationId,
-            $type,
-            $title,
-            $description,
-            $secretDetail !== '' ? $secretDetail : null,
-            $photoFilename,
-        ]);
+        try {
+            $pdo->beginTransaction();
+            $stmt = $pdo->prepare(
+                "INSERT INTO items
+                (user_id, category_id, location_id, type, title, description, secret_detail, photo, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'open')"
+            );
+            $stmt->execute([
+                $_SESSION['user_id'],
+                $categoryId,
+                $locationId,
+                $type,
+                $title,
+                $description,
+                $secretDetail !== '' ? $secretDetail : null,
+                $photoFilename,
+            ]);
+
+            $itemId = (int) $pdo->lastInsertId();
+            $questionStmt = $pdo->prepare(
+                "INSERT INTO verification_questions (item_id, question, answer) VALUES (?, ?, ?)"
+            );
+            for ($i = 0; $i < 2; $i++) {
+                $questionStmt->execute([
+                    $itemId,
+                    trim((string) $questions[$i]),
+                    trim((string) $answers[$i]),
+                ]);
+            }
+            $pdo->commit();
+        } catch (Throwable $exception) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            throw $exception;
+        }
  
         set_flash('success', 'Laporan barang berhasil diposting!');
         header('Location: ' . base_url('items/index.php'));
@@ -168,6 +203,23 @@ include __DIR__ . '/../includes/header.php';
                         <textarea name="secret_detail" rows="2" class="form-control"
                                   placeholder="Ciri khusus yang TIDAK tampil di publik (misal: isi dompet, stiker khusus)."><?= e($_POST['secret_detail'] ?? '') ?></textarea>
                         <div class="form-text">Disembunyikan dari halaman publik untuk mencegah klaim asal tebak.</div>
+                    </div>
+
+                    <div class="border rounded-3 p-3 p-md-4 mb-4 bg-light">
+                        <h2 class="h6 fw-bold mb-1">Pertanyaan Verifikasi</h2>
+                        <p class="small text-muted mb-3">Buat 2 pertanyaan isian bebas. Pertanyaan tampil pada halaman barang, sedangkan jawabannya tidak ditampilkan ke publik.</p>
+                        <?php for ($i = 0; $i < 2; $i++): ?>
+                            <div class="<?= $i === 0 ? 'mb-3' : '' ?>">
+                                <label class="form-label">Pertanyaan <?= $i + 1 ?> <span class="text-danger">*</span></label>
+                                <input type="text" name="questions[<?= $i ?>]" class="form-control" maxlength="255"
+                                       placeholder="Contoh: Apa warna gantungan kuncinya?"
+                                       value="<?= e($questions[$i] ?? '') ?>" required>
+                                <label class="form-label mt-2">Jawaban rahasia <span class="text-danger">*</span></label>
+                                <input type="text" name="answers[<?= $i ?>]" class="form-control" maxlength="255"
+                                       placeholder="Jawaban ini tidak ditampilkan ke publik"
+                                       value="<?= e($answers[$i] ?? '') ?>" required>
+                            </div>
+                        <?php endfor; ?>
                     </div>
 
                     <div class="mb-3">
