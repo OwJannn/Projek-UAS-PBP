@@ -39,12 +39,13 @@ include __DIR__ . '/../includes/header.php';
                     <th>Status</th>
                     <th>Pelapor</th>
                     <th>Tanggal</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
             <?php if (empty($items)): ?>
                 <tr>
-                    <td colspan="7" class="text-center py-4 text-muted">
+                    <td colspan="8" class="text-center py-4 text-muted">
                         Belum ada postingan barang.
                     </td>
                 </tr>
@@ -61,9 +62,23 @@ include __DIR__ . '/../includes/header.php';
                         </td>
                         <td><?= e($item['category_name']) ?></td>
                         <td><?= e($item['location_name']) ?></td>
-                        <td><span class="badge bg-secondary"><?= e($item['status']) ?></span></td>
+                        <td>
+                            <?php
+                            $itemStatuses = [
+                                'open' => ['Tersedia', 'success'],
+                                'claim_pending' => ['Menunggu verifikasi', 'warning'],
+                                'returned' => ['Dikembalikan', 'primary'],
+                                'closed' => ['Ditutup', 'secondary'],
+                            ];
+                            [$statusLabel, $statusColor] = $itemStatuses[$item['status']] ?? [$item['status'], 'secondary'];
+                            ?>
+                            <span class="badge bg-<?= e($statusColor) ?>"><?= e($statusLabel) ?></span>
+                        </td>
                         <td><?= e($item['reporter_name']) ?></td>
                         <td class="small text-muted"><?= e(date('d/m/Y', strtotime($item['created_at']))) ?></td>
+                        <td class="text-end">
+                            <a href="<?= e(base_url('items/detail.php?id=' . (int) $item['id'])) ?>" class="btn btn-sm btn-outline-primary">Detail</a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
